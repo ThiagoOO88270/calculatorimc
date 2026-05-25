@@ -1,43 +1,85 @@
 function calcularIMC() {
-    // Obtém os elementos de entrada e a área de resultado
-    const pesoInput = document.getElementById('peso');
-    const alturaInput = document.getElementById('altura');
-    const resultadoDiv = document.getElementById('resultado');
 
-    // Converte os valores para números flutuantes (decimais)
-    const peso = parseFloat(pesoInput.value);
-    const altura = parseFloat(alturaInput.value);
+    const peso = parseFloat(document.getElementById('peso').value);
+    const altura = parseFloat(document.getElementById('altura').value);
 
-    // Validação simples para garantir que os dados foram preenchidos corretamente
+    const resultado = document.getElementById('resultado');
+
+    // VALIDAÇÃO
     if (!peso || !altura || peso <= 0 || altura <= 0) {
-        resultadoDiv.style.color = '#e74c3c';
-        resultadoDiv.innerHTML = "Por favor, insira valores válidos.";
+
+        resultado.classList.add('show');
+
+        resultado.innerHTML = `
+            <p style="color:#f87171;">
+                Insira valores válidos.
+            </p>
+        `;
+
         return;
     }
 
-    // Cálculo do IMC: Peso dividido pela Altura ao quadrado
+    // CALCULO
     const imc = peso / (altura * altura);
-    
-    // Determina a classificação com base no resultado do IMC
-    let classificacao = '';
-    resultadoDiv.style.color = '#333'; // Reseta a cor do texto para o padrão
 
+    let classificacao = '';
+    let cor = '';
+    let progresso = 0;
+
+    // CLASSIFICAÇÃO
     if (imc < 18.5) {
         classificacao = 'Abaixo do peso';
-    } else if (imc >= 18.5 && imc < 24.9) {
-        classificacao = 'Peso normal';
-        resultadoDiv.style.color = '#2ecc71'; // Verde para peso ideal
-    } else if (imc >= 25 && imc < 29.9) {
+        cor = '#facc15';
+        progresso = 25;
+
+    } else if (imc < 24.9) {
+        classificacao = 'Peso ideal';
+        cor = '#22c55e';
+        progresso = 50;
+
+    } else if (imc < 29.9) {
         classificacao = 'Sobrepeso';
-    } else if (imc >= 30 && imc < 34.9) {
+        cor = '#fb923c';
+        progresso = 70;
+
+    } else if (imc < 34.9) {
         classificacao = 'Obesidade Grau I';
-    } else if (imc >= 35 && imc < 39.9) {
+        cor = '#ef4444';
+        progresso = 85;
+
+    } else if (imc < 39.9) {
         classificacao = 'Obesidade Grau II';
+        cor = '#dc2626';
+        progresso = 92;
+
     } else {
-        classificacao = 'Obesidade Grau III ou Mórbida';
-        resultadoDiv.style.color = '#e74c3c'; // Vermelho para alerta
+        classificacao = 'Obesidade Grau III';
+        cor = '#991b1b';
+        progresso = 100;
     }
 
-    // Exibe o resultado formatado com duas casas decimais
-    resultadoDiv.innerHTML = `Seu IMC é: ${imc.toFixed(2)}<br>(${classificacao})`;
+    // RESULTADO
+    resultado.innerHTML = `
+        <div>
+            <h3 style="font-size: 42px; color:${cor};">
+                ${imc.toFixed(1)}
+            </h3>
+
+            <p style="margin-top:8px;">
+                ${classificacao}
+            </p>
+
+            <div class="barra-imc">
+                <div 
+                    class="progresso"
+                    style="
+                        width:${progresso}%;
+                        background:${cor};
+                    "
+                ></div>
+            </div>
+        </div>
+    `;
+
+    resultado.classList.add('show');
 }
